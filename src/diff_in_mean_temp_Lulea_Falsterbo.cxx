@@ -5,7 +5,7 @@
 #include "TFile.h"
 #include "TTree.h"
 #include "TGraphErrors.h"
-#include "include/analysis_and_plotting.h"
+//#include "include/analysis_and_plotting.h"
 #include <TDirectory.h>   
 #include <TProfile.h>
 #include <TFile.h>
@@ -27,13 +27,7 @@ void diff_in_mean_temp_Lulea_Falsterbo()
     TFile *lfile = TFile::Open(lule_tree.c_str(), "READ");
     TTree *ltree = (TTree*)lfile->Get("tree");
 
-    //reading the branches with temperatures and year numbers for both trees 
-    int lyear, fyear;
-    float ltemp, ftemp;
-    ltree->SetBranchAddress("year", &lyear);
-    ltree->SetBranchAddress("temperature", &ltemp);
-    ftree->SetBranchAddress("year", &fyear);
-    ftree->SetBranchAddress("temperature", &ftemp);
+    
 
     //set starting and ending years for our plot
     int startyear = 1950;
@@ -114,7 +108,7 @@ double start = fyears.front() - 0.5;
 double end   = fyears.back() + 0.5;
 
 // Make a histogram with one bin per year
-TH1D *hdiff = new TH1D("hdiff", "Average Temperature Difference per Year;Year;ΔT (°C)",
+TH1D *hdiff = new TH1D("hdiff", "           Temperature difference between Lulea and Falsterbo against time;Year;Temperature",
                        nYears, start, end);
 
 // Fill the bins manually
@@ -127,8 +121,14 @@ hdiff->SetLineColor(kBlue+1);
 hdiff->SetFillColorAlpha(kAzure-9, 0.4);
 hdiff->SetLineWidth(2);
 
-TCanvas *c2 = new TCanvas("c2", "Histogram of ΔT", 900, 600);
+
+TCanvas *c2 = new TCanvas("c2", "Histogram of DiffT", 900, 600);
+//tell root to show title
+gStyle->SetOptTitle(1);
+
 hdiff->Draw("HIST");
+//increase spacing to show title properly
+c2->SetTopMargin(0.10);
 
 c2->SaveAs("temp_difference_histogram.png"); 
 }
